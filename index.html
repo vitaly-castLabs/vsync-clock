@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vsync'ed Clock</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(45deg, #aa8aa8, #618caa);
+        }
+        canvas {
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="clockCanvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('clockCanvas')
+    const ctx = canvas.getContext('2d')
+
+    function resizeCanvas() {
+        // Set canvas dimensions to match the window
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+    }
+
+    function updateClock() {
+        const now = new Date()
+
+        const hours = now.getHours().toString().padStart(2, '0')
+        const minutes = now.getMinutes().toString().padStart(2, '0')
+        const seconds = now.getSeconds().toString().padStart(2, '0')
+        const milliseconds = now.getMilliseconds().toString().padStart(3, '0')
+
+        const timeString = `${hours}:${minutes}:${seconds}.${milliseconds}`
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+        const fontSize = Math.min(window.innerHeight, window.innerWidth * 0.12)
+        ctx.font = `${fontSize}px monospace`
+        ctx.fillStyle = '#111111'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+
+        ctx.fillText(timeString, canvas.width / 2, canvas.height / 2)
+
+        requestAnimationFrame(updateClock)
+    }
+
+    window.addEventListener('load', () => {
+        window.addEventListener('resize', resizeCanvas)
+
+        resizeCanvas()
+        updateClock()
+    })
+</script>
+
+</body>
+</html>
